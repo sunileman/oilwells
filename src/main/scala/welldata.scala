@@ -14,6 +14,15 @@ object welldata {
 
     import spark.implicits._
 
+    val sourcedataloc = args(0)
+    val targetdataloc = args(1)
+
+    println("\n*******************************")
+    println("\n*******************************")
+    println("source s3 location: "+sourcedataloc)
+    println("target s3 location: "+targetdataloc)
+    println("\n*******************************")
+    println("\n*******************************")
 
     val schema = new StructType()
       .add("ReportDate",StringType,true)
@@ -38,23 +47,22 @@ object welldata {
       .add("Lat",LongType,true)
       .add("Long",LongType,true)
 
-    val imputmessage = args(0)
+
 
     val df = spark.read.format("csv")
       .option("header","true")
       .schema(schema)
       .load("file:///Users/sunile.manjee/Downloads/2015_05.csv")
 
-    df.printSchema()
+    //df.printSchema()
 
-    df.groupBy("WellName").count().show()
+    //df.groupBy("WellName").count().show()
 
 
-    println("\n*******************************")
-    println("\n*******************************")
-    println("source s3 file: "+imputmessage)
-    println("\n*******************************")
-    println("\n*******************************")
+    df.write.mode(SaveMode.Overwrite).parquet("file:///Users/sunile.manjee/Downloads/2015_05.parquet")
+    //df.write.format("parquet").save("file:///Users/sunile.manjee/Downloads/2015_05.parquet")
+
+
 
 
 
